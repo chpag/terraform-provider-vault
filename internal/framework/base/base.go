@@ -12,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/action"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-provider-vault/internal/consts"
 	"github.com/hashicorp/terraform-provider-vault/internal/provider"
@@ -90,5 +91,18 @@ type EphemeralResourceWithConfigure struct {
 func (r *EphemeralResourceWithConfigure) Configure(_ context.Context, request ephemeral.ConfigureRequest, response *ephemeral.ConfigureResponse) {
 	if v, ok := request.ProviderData.(*provider.ProviderMeta); ok {
 		r.meta = v
+	}
+}
+
+
+type ActionWithConfigure struct {
+	withMeta
+}
+
+// Configure enables provider-level data or clients to be set in the
+// provider-defined Action type.
+func (a *ActionWithConfigure) Configure(_ context.Context, request action.ConfigureRequest, response *action.ConfigureResponse) {
+	if v, ok := request.ProviderData.(*provider.ProviderMeta); ok {
+		a.meta = v
 	}
 }
