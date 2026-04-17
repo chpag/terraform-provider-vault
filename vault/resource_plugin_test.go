@@ -97,7 +97,7 @@ func TestPlugin_ent(t *testing.T) {
 
 	// VAULT_PLUGIN_ENT_NAMED,VAULT_PLUGIN_ENT_VERSION should be set to the name of the plugin executable
 	// in the configured plugin_directory for Vault.
-	cmd := os.Getenv(envPluginEntName)
+	name := os.Getenv(envPluginEntName)
 	version := os.Getenv(envPluginEntVersion)
 
 	resource.Test(t, resource.TestCase{
@@ -109,13 +109,12 @@ func TestPlugin_ent(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: testPluginConfig_ent(typ, envPluginEntName, version, args, env),
+				Config: testPluginConfig_ent(typ, name, version, args, env),
 				Check: resource.ComposeTestCheckFunc(
 
 					resource.TestCheckResourceAttr(resourceName, consts.FieldType, typ),
-					resource.TestCheckResourceAttr(resourceName, consts.FieldName, envPluginEntName),
+					resource.TestCheckResourceAttr(resourceName, consts.FieldName, name),
 					resource.TestCheckResourceAttr(resourceName, consts.FieldVersion, version),
-					resource.TestCheckResourceAttr(resourceName, fieldCommand, cmd),
 					testValidateList(resourceName, fieldArgs, []string{"--foo"}),
 					testValidateList(resourceName, fieldEnv, []string{"FOO=BAR"}),
 				),

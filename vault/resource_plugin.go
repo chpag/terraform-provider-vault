@@ -213,6 +213,7 @@ func pluginRead(ctx context.Context, d *schema.ResourceData, meta interface{}) d
 	// Unset SHA256 for enteprise plugin version
 	if strings.HasSuffix(version, "+ent") {
 		resp.SHA256 = ""
+		resp.Command = ""
 	}
 
 	result := map[string]any{
