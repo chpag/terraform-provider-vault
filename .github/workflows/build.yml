@@ -309,7 +309,7 @@ jobs:
           echo "test2"
           ls -ail "${ZIP_DIR}"
           echo "test3"
-          chown -r 100:100 "${ZIP_DIR}"
+          echo "chown -r 100:100 ${ZIP_DIR}"
           echo "test4"
           ls -ail "${ZIP_DIR}"
           echo "type=${TYPE}" >> "${GITHUB_OUTPUT}"
