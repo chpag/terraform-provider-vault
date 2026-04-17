@@ -21,6 +21,7 @@ import (
 )
 
 const envPluginCommand = "VAULT_PLUGIN_COMMAND"
+const envPluginEntType = "VAULT_PLUGIN_ENT_TYPE"
 const envPluginEntName = "VAULT_PLUGIN_ENT_NAME"
 const envPluginEntVersion = "VAULT_PLUGIN_ENT_VERSION"
 
@@ -85,7 +86,6 @@ func TestPlugin(t *testing.T) {
 
 func TestPlugin_ent(t *testing.T) {
 	const (
-		typ  = "database"
 		args = `["--foo"]`
 		env  = `["FOO=BAR"]`
 
@@ -97,6 +97,7 @@ func TestPlugin_ent(t *testing.T) {
 
 	// VAULT_PLUGIN_ENT_NAMED,VAULT_PLUGIN_ENT_VERSION should be set to the name of the plugin executable
 	// in the configured plugin_directory for Vault.
+	typ := os.Getenv(envPluginEntType)
 	name := os.Getenv(envPluginEntName)
 	version := os.Getenv(envPluginEntVersion)
 

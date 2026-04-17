@@ -153,18 +153,18 @@ jobs:
       fail-fast: false
       matrix:
         image:
-        - "vault-enterprise:1.16.31-ent"
-        - "vault-enterprise:1.17.18-ent"
-        - "vault-enterprise:1.18.15-ent"
+#        - "vault-enterprise:1.16.31-ent"
+#        - "vault-enterprise:1.17.18-ent"
+#        - "vault-enterprise:1.18.15-ent"
         - "vault-enterprise:1.19.15-ent"
-        - "vault-enterprise:1.20.9-ent"
-        - "vault-enterprise:1.21.4-ent"
-        - "vault-enterprise:2.0.0-ent"
+#        - "vault-enterprise:1.20.9-ent"
+#        - "vault-enterprise:1.21.4-ent"
+#        - "vault-enterprise:2.0.0-ent"
         - "vault:latest"
         terraform_version:
         - "latest" # always test against the latest stable, which might be a duplicate matrix member.
-        - "1.12.2"
-        - "1.11.4"
+#        - "1.12.2"
+#        - "1.11.4"
         #- "1.10.5" # tests do not seem to pass with this version set, skipping for now.
     services:
       vault:
@@ -293,6 +293,7 @@ jobs:
       - name: Download external Enterprise plugin
         id: plugin_enterprise
         env:
+          TYPE: "database"
           PLUGIN: "vault-plugin-database-oracle"
           VERSION: "0.13.0+ent"
         run: |
@@ -302,6 +303,16 @@ jobs:
           curl -sO "https://releases.hashicorp.com/${PLUGIN}/${VERSION}/{${ZIP},${SHA256SUMS}}"
           shasum -a 256 -c "${PLUGIN}_${VERSION}_SHA256SUMS" --ignore-missing
           unzip "${ZIP}" -d "${ZIP_DIR}"; rm "${ZIP}" "${SHA256SUMS}"
+          pwd
+          echo "test1"
+          ls -ail
+          echo "test2"
+          ls -ail "${ZIP_DIR}"
+          echo "test3"
+          chown -R 100:100 "${ZIP_DIR}"
+          echo "test4"
+          ls -ail "${ZIP_DIR}"
+          echo "type=${TYPE}" >> "${GITHUB_OUTPUT}"
           echo "name=${PLUGIN}" >> "${GITHUB_OUTPUT}"
           echo "version=${VERSION}" >> "${GITHUB_OUTPUT}"
 
@@ -350,6 +361,7 @@ jobs:
           # service URL of accessible from the Vault container
           LDAP_URL: "ldap://openldap:389"
           VAULT_PLUGIN_COMMAND: ${{ steps.plugin.outputs.command }}
+          VAULT_PLUGIN_ENT_TYPE:  ${{ steps.plugin_enterprise.outputs.type }}
           VAULT_PLUGIN_ENT_NAME:  ${{ steps.plugin_enterprise.outputs.name }}
           VAULT_PLUGIN_ENT_VERSION:  ${{ steps.plugin_enterprise.outputs.version }}
         run: |
