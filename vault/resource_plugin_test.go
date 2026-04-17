@@ -93,7 +93,6 @@ func TestPlugin_ent(t *testing.T) {
 		envUpdated  = `["FOO=BAZ"]`
 	)
 
-
 	resourceName := "vault_plugin.test"
 
 	// VAULT_PLUGIN_ENT_NAMED,VAULT_PLUGIN_ENT_VERSION should be set to the name of the plugin executable
