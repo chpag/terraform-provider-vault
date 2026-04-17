@@ -21,7 +21,7 @@ import (
 )
 
 const envPluginCommand = "VAULT_PLUGIN_COMMAND"
-const envPluginEntCommand = "VAULT_PLUGIN_ENT_COMMAND"
+const envPluginEntName = "VAULT_PLUGIN_ENT_NAME"
 const envPluginEntVersion = "VAULT_PLUGIN_ENT_VERSION"
 
 func TestPlugin(t *testing.T) {
@@ -93,28 +93,28 @@ func TestPlugin_ent(t *testing.T) {
 		envUpdated  = `["FOO=BAZ"]`
 	)
 
-	destName := acctest.RandomWithPrefix("tf/plugin")
+
 	resourceName := "vault_plugin.test"
 
-	// VAULT_PLUGIN_ENT_COMMAND,VAULT_PLUGIN_ENT_VERSION should be set to the name of the plugin executable
+	// VAULT_PLUGIN_ENT_NAMED,VAULT_PLUGIN_ENT_VERSION should be set to the name of the plugin executable
 	// in the configured plugin_directory for Vault.
-	cmd := os.Getenv(envPluginEntCommand)
+	cmd := os.Getenv(envPluginEntName)
 	version := os.Getenv(envPluginEntVersion)
 
 	resource.Test(t, resource.TestCase{
 		ProtoV5ProviderFactories: testAccProtoV5ProviderFactories(context.Background(), t),
 		PreCheck: func() {
 			testutil.TestAccPreCheck(t)
-			testutil.SkipTestEnvUnset(t, envPluginEntCommand, envPluginEntVersion)
+			testutil.SkipTestEnvUnset(t, envPluginEntName, envPluginEntVersion)
 			SkipIfAPIVersionLT(t, testProvider.Meta(), provider.VaultVersion112)
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: testPluginConfig_ent(typ, destName, version, cmd, args, env),
+				Config: testPluginConfig_ent(typ, envPluginEntName, version, args, env),
 				Check: resource.ComposeTestCheckFunc(
 
 					resource.TestCheckResourceAttr(resourceName, consts.FieldType, typ),
-					resource.TestCheckResourceAttr(resourceName, consts.FieldName, destName),
+					resource.TestCheckResourceAttr(resourceName, consts.FieldName, envPluginEntName),
 					resource.TestCheckResourceAttr(resourceName, consts.FieldVersion, version),
 					resource.TestCheckResourceAttr(resourceName, fieldCommand, cmd),
 					testValidateList(resourceName, fieldArgs, []string{"--foo"}),
@@ -139,17 +139,16 @@ resource "vault_plugin" "test" {
 `, pluginType, name, version, sha256, command, args, env)
 }
 
-func testPluginConfig_ent(pluginType, name, version, command, args, env string) string {
+func testPluginConfig_ent(pluginType, name, version, args, env string) string {
 	return fmt.Sprintf(`
 resource "vault_plugin" "test" {
   type      = "%s"
   name      = "%s"
   version   = "%s"
-  command   = "%s"
   args      = %s
   env       = %s
 }
-`, pluginType, name, version, command, args, env)
+`, pluginType, name, version, args, env)
 }
 
 func testValidateList(resourceName, attr string, expected []string) resource.TestCheckFunc {
