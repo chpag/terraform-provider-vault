@@ -301,7 +301,7 @@ jobs:
           SHA256SUMS="${PLUGIN}_${VERSION}_SHA256SUMS"
           curl -sO "https://releases.hashicorp.com/${PLUGIN}/${VERSION}/{${ZIP},${SHA256SUMS}}"
           shasum -a 256 -c "${PLUGIN}_${VERSION}_SHA256SUMS" --ignore-missing
-          unzip "${ZIP}" -d "${ZIP_DIR}"; rm "${ZIP}""${SHA256SUMS}"
+          unzip "${ZIP}" -d "${ZIP_DIR}"; rm "${ZIP}" "${SHA256SUMS}"
           echo "name=${PLUGIN}" >> "${GITHUB_OUTPUT}"
           echo "version=${VERSION}" >> "${GITHUB_OUTPUT}"
 
