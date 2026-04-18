@@ -303,13 +303,7 @@ jobs:
           curl -sO "https://releases.hashicorp.com/${PLUGIN}/${VERSION}/{${ZIP},${SHA256SUMS}}"
           shasum -a 256 -c "${PLUGIN}_${VERSION}_SHA256SUMS" --ignore-missing
           unzip "${ZIP}" -d "${ZIP_DIR}"; rm "${ZIP}" "${SHA256SUMS}"
-          pwd
-          echo "test1"
-          ls -ail
-          echo "test2"
-          ls -ail "${ZIP_DIR}"
-          echo "test3"
-          echo "chown -r 100:100 ${ZIP_DIR}"
+          chomod a+r "${ZIP_DIR}/*"
           echo "test4"
           ls -ail "${ZIP_DIR}"
           echo "type=${TYPE}" >> "${GITHUB_OUTPUT}"
