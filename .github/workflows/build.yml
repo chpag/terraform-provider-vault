@@ -305,7 +305,7 @@ jobs:
           unzip "${ZIP}" -d "${ZIP_DIR}"; rm "${ZIP}" "${SHA256SUMS}"
           echo "test1"
           echo "chmod a+r ${ZIP_DIR}/metadata.json.sig"
-          ls -l ${ZIP_DIR}/metadata.json.sig"
+          ls -l "${ZIP_DIR}/metadata.json.sig"
           chmod a+r "${ZIP_DIR}/metadata.json.sig"
           ls -ail "${ZIP_DIR}"
           {
