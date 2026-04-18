@@ -303,6 +303,7 @@ jobs:
           curl -sO "https://releases.hashicorp.com/${PLUGIN}/${VERSION}/{${ZIP},${SHA256SUMS}}"
           shasum -a 256 -c "${PLUGIN}_${VERSION}_SHA256SUMS" --ignore-missing
           unzip "${ZIP}" -d "${ZIP_DIR}"; rm "${ZIP}" "${SHA256SUMS}"
+          echo "test1"
           echo "chmod a+r ${ZIP_DIR}/*.sig"
           chmod a+r "${ZIP_DIR}/*.sig"
           ls -ail "${ZIP_DIR}"
